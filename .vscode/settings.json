@@ -1,11 +1,12 @@
 {
+    "cmake.ctest.testExplorerIntegrationEnabled" : false,
     "testMate.cpp.test.executables": "${workspaceFolder}/build/**/*test.exe",
     "testMate.cpp.debug.configTemplate": {
         "type": "cppdbg", 
-        "MIMode": "gdb",
+        "request": "launch",
         "program": "${exec}",
-        "args": "${argsArray}",
+        "args": "${args}",
         "cwd": "${cwd}",
-        "env": "${envObj}"
-    }
+        "preLaunchTask": "CMake: Build Current"
+    }   
 }
