@@ -1,34 +1,82 @@
 #include <libalgos/sort/sort.hpp>
 
+#include <vector>
+#include <functional>
+#include <algorithm>
+#include <string>
+
 #include <gtest/gtest.h>
 
+// Generic sort functional object interface
+template<typename ItType, typename CompType>
+using SortFuncInterface = std::function<void(ItType, ItType, CompType)>;
 
-TEST(SelectionSortTest, NormalCollection){
+// Iterator and Comparator 
+using ItType = std::vector<int>::iterator;
+auto test_comparator = [](int lhs, int rhs) { return lhs < rhs; };
+using CompType = decltype(test_comparator);
+
+// Helper for nice names for tests
+struct SortInstance {
+    SortFuncInterface<ItType, CompType> func;
+    std::string name;
+};
+
+// Name getter
+struct GetName {
+    template<typename ParamType>
+    std::string operator()(const testing::TestParamInfo<ParamType> & info) const {
+        return info.param.name;
+    }
+};
+
+class SortTest: public ::testing::TestWithParam<SortInstance> {};
+
+INSTANTIATE_TEST_SUITE_P(
+    SortTests,
+    SortTest,
+    ::testing::Values(
+        SortInstance{algos::sort::insertion_sort<ItType, CompType>, "insertion_sort"},
+        SortInstance{algos::sort::selection_sort<ItType, CompType>, "selection_sort"}
+    ),
+    GetName()
+);
+
+
+TEST_P(SortTest, UnsortedCollection){
     std::vector<int> sample = {1, 5, 1, 2};
-    algos::sort::selection_sort(sample.begin(), sample.end(), [](auto lhs, auto rhs) { return lhs < rhs;});
-    EXPECT_EQ(std::vector<int>({1, 1, 2, 5}), sample);
+    auto& instance = GetParam();
+    instance.func(sample.begin(), sample.end(), test_comparator);
+    EXPECT_TRUE(std::is_sorted(sample.begin(), sample.end(), test_comparator));
 }
 
-TEST(SelectionSortTest, EmptyCollection){
+TEST_P(SortTest, EmptyCollection){
     std::vector<int> sample = {};
-    algos::sort::selection_sort(sample.begin(), sample.end(), [](auto lhs, auto rhs) { return lhs < rhs;});
-    EXPECT_EQ(std::vector<int>({}), sample);
+    auto& instance = GetParam();
+    instance.func(sample.begin(), sample.end(), test_comparator);
+    EXPECT_TRUE(std::is_sorted(sample.begin(), sample.end(), test_comparator));
 }
 
-TEST(SelectionSortTest, AlreadySortedCollection){
+TEST_P(SortTest, AlreadySortedCollection){
     std::vector<int> sample = {1, 2, 3, 4};
-    algos::sort::selection_sort(sample.begin(), sample.end(), [](auto lhs, auto rhs) { return lhs < rhs;});
-    EXPECT_EQ(std::vector<int>({1, 2, 3, 4}), sample);
+    auto& instance = GetParam();
+    instance.func(sample.begin(), sample.end(), test_comparator);
+    EXPECT_TRUE(std::is_sorted(sample.begin(), sample.end(), test_comparator));
 }
 
-TEST(SelectionSortTest, OneElementCollection){
+TEST_P(SortTest, OneElementCollection){
     std::vector<int> sample = {1};
-    algos::sort::selection_sort(sample.begin(), sample.end(), [](auto lhs, auto rhs) { return lhs < rhs;});
-    EXPECT_EQ(std::vector<int>({1}), sample);
+    auto& instance = GetParam();
+    instance.func(sample.begin(), sample.end(), test_comparator);
+    EXPECT_TRUE(std::is_sorted(sample.begin(), sample.end(), test_comparator));
 }
 
-TEST(SelectionSortTest, ReverseOrderSortedCollection) {
+TEST_P(SortTest, ReverseOrderSortedCollection) {
     std::vector<int> sample = {4, 3, 2, 1};
-    algos::sort::selection_sort(sample.begin(), sample.end(), [](auto lhs, auto rhs) { return lhs < rhs;});
-    EXPECT_EQ(std::vector<int>({1, 2, 3, 4}), sample);
+    auto& instance = GetParam();
+    instance.func(sample.begin(), sample.end(), test_comparator);
+    EXPECT_TRUE(std::is_sorted(sample.begin(), sample.end(), test_comparator));
 }
+
+
+
