@@ -37,7 +37,8 @@ INSTANTIATE_TEST_SUITE_P(
     SortTest,
     ::testing::Values(
         SortInstance{algos::sort::insertion_sort<ItType, CompType>, "insertion_sort"},
-        SortInstance{algos::sort::selection_sort<ItType, CompType>, "selection_sort"}
+        SortInstance{algos::sort::selection_sort<ItType, CompType>, "selection_sort"},
+        SortInstance{algos::sort::merge_sort<ItType, CompType>, "merge_sort"}
     ),
     GetName()
 );
