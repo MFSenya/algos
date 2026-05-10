@@ -8,4 +8,13 @@ namespace custom_gtest_helpers{
             return info.param.name;
         }
     };
+
+    template <typename Container>
+    void PrintContainer(const Container& c, const std::string& label = "Container") {
+        std::cout << "[  DEBUG   ] " << label << ": [ ";
+        for (auto it = std::begin(c); it != std::end(c); ++it) {
+            std::cout << *it << (std::next(it) != std::end(c) ? ", " : "");
+        }
+        std::cout << " ]" << std::endl;
+    }
 }
