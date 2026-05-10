@@ -21,7 +21,8 @@ using ActualPartitionParamTestType = PartitionParamTest<int, std::vector>;
 
 TEST_P(ActualPartitionParamTestType, ChecksAlgoCorrectness){
    auto param = GetParam();
-   algos::partition(param.data, 0, param.data.size() - 1);
+   const auto & pivot = param.data.back();
+   algos::partition(param.data, 0, param.data.size() - 1, [&pivot](const auto & element){ return element <= pivot; });
    EXPECT_EQ(param.data, param.expected);
 }
 
