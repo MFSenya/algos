@@ -4,6 +4,7 @@
 #include <string>
 
 #include <libalgos/partition/partition.hpp>
+#include <tests/custom_gtest_helpers.hpp>
 
 template <typename ElementType, template <typename...> class ContainerType>
 struct PartitionTestParam {
@@ -16,14 +17,6 @@ template <typename ElementType, template <typename...> class ContainerType>
 class PartitionParamTest : public ::testing::TestWithParam<PartitionTestParam<ElementType, ContainerType>> {};
 
 using ActualPartitionParamTestType = PartitionParamTest<int, std::vector>;
-
-// Name getter
-struct GetName {
-    template<typename ParamType>
-    std::string operator()(const testing::TestParamInfo<ParamType> & info) const {
-        return info.param.name;
-    }
-};
 
 
 TEST_P(ActualPartitionParamTestType, ChecksAlgoCorrectness){
@@ -40,5 +33,5 @@ INSTANTIATE_TEST_SUITE_P(
         PartitionTestParam(std::vector{1,3}, std::vector{1,3}, "two_elements"),
         PartitionTestParam(std::vector{2,5,3}, std::vector{2,3,5}, "three_elements")
     ),
-    GetName()
+    custom_gtest_helpers::GetName()
 );

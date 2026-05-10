@@ -19,3 +19,4 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_subdirectory(${PROJECT_NAME})
+add_subdirectory(tests)

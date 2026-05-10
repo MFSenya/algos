@@ -36,6 +36,7 @@ FOREACH(subdir ${SUBDIRS})
   )
   target_link_libraries(
     ${unittestexename}
+    custom_gtest_helpers
     GTest::gtest_main
   )
   gtest_discover_tests(${unittestexename})

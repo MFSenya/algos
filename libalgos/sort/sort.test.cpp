@@ -7,6 +7,8 @@
 
 #include <gtest/gtest.h>
 
+#include <tests/custom_gtest_helpers.hpp>
+
 // Generic sort functional object interface
 template<typename ItType, typename CompType>
 using SortFuncInterface = std::function<void(ItType, ItType, CompType)>;
@@ -22,13 +24,6 @@ struct SortInstance {
     std::string name;
 };
 
-// Name getter
-struct GetName {
-    template<typename ParamType>
-    std::string operator()(const testing::TestParamInfo<ParamType> & info) const {
-        return info.param.name;
-    }
-};
 
 class SortTest: public ::testing::TestWithParam<SortInstance> {};
 
@@ -40,7 +35,7 @@ INSTANTIATE_TEST_SUITE_P(
         SortInstance{algos::sort::selection_sort<ItType, CompType>, "selection_sort"},
         SortInstance{algos::sort::merge_sort<ItType, CompType>, "merge_sort"}
     ),
-    GetName()
+    custom_gtest_helpers::GetName()
 );
 
 
